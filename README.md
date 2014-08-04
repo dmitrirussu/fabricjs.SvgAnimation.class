@@ -18,6 +18,7 @@ Example of using:
 		obj.set({
 			left: 100,
 			top: 200
+			//,loop: true
 		});
 
 		obj.onePlay().setDelay(100);

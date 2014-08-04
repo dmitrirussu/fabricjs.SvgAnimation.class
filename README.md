@@ -13,7 +13,7 @@ Example of using:
 
 	var canvas = fabric.createCanvasElement();
 
-	//One Svg Animation Play
+	//One Play Svg Animation
 	new fabric.SvgAnimation('assets/animation.svg', function(obj){
 		obj.set({
 			left: 100,

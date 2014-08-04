@@ -5,7 +5,7 @@ Using this fabric.SvgAnimation class offer possibility tot animate an Svg object
 
 Important:
 ===
-	- Vectorial SVG - canvas animation
+	- Vectorial SVG - Canvas animation
 
 
 Example of using:

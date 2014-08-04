@@ -32,3 +32,6 @@ Example of using:
 		canvas.centerObject(obj).add(obj).renderAll();
 	});
 	canvas.renderAll();
+
+<a href="https://github.com/kangax/fabric.js" ta>Fabric JS</a>
+===

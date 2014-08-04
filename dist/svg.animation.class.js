@@ -85,7 +85,7 @@
 			var _this = this;
 				callBack = callBack !== "undefined" ? callBack : function(){};
 			this.groupPaths = [];
-			this.path = [];
+			this.paths = [];
 			this.options = {};
 
 			this.loadSvgFromUrl(url, function(){
@@ -270,13 +270,12 @@
 						_this.idLayer = (_this.idLayer > (_this.groupPaths.length - 1) ? 0 : _this.idLayer + 1);
 
 						_this.canvas.renderAll();
-
-						if ( _this.idLayer < _this.groupPaths.length) {
-							fabric.util.requestAnimFrame(render);
-						}
+						fabric.util.requestAnimFrame(render);
 					}
 					else if ( _this.loop ) {
 						_this.idLayer = 0;
+
+						_this.canvas.renderAll();
 						fabric.util.requestAnimFrame(render);
 					}
 

@@ -28,7 +28,7 @@
 		 * @type String
 		 * @default
 		 */
-		type: 'svg-path-animator',
+		type: 'svg-animation',
 
 		/**
 		 * Fill value

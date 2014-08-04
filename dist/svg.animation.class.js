@@ -69,6 +69,8 @@
 		 */
 		delay: 1000,
 
+		loop: false,
+
 		/**
 		 * Canvas container
 		 */
@@ -82,6 +84,9 @@
 		initialize: function(url, callBack) {
 			var _this = this;
 				callBack = callBack !== "undefined" ? callBack : function(){};
+			this.groupPaths = [];
+			this.path = [];
+			this.options = {};
 
 			this.loadSvgFromUrl(url, function(){
 				_this.options.sourcePath = url;
@@ -238,6 +243,17 @@
 		},
 
 		/**
+		 * Set Animation Delay
+		 * @param delay
+		 * @returns {fabric.SvgAnimation}
+		 */
+		setDelay: function(delay) {
+			this.delay = delay;
+
+			return this;
+		},
+
+		/**
 		 * One play animation
 		 *
 		 * @param callback
@@ -246,7 +262,7 @@
 		onePlay: function(callback) {
 			var _this = this;
 
-			callback = (callback !== 'undefined' && callback !== undefined ? callback : function(){});
+			callback = callback === undefined ? function(){} : callback;
 
 			(function render() {
 				setTimeout(function(){
@@ -254,29 +270,25 @@
 					if ( _this.idLayer < _this.groupPaths.length - 1 ) {
 
 						_this.drawLayer(_this.ctx, _this.groupPaths[_this.idLayer]);
-
 						_this.idLayer = (_this.idLayer > (_this.groupPaths.length - 1) ? 0 : _this.idLayer + 1);
+
+						_this.canvas.renderAll();
+
+						if ( _this.idLayer < _this.groupPaths.length) {
+							fabric.util.requestAnimFrame(render);
+						}
+					}
+					else if ( _this.loop ) {
+						_this.idLayer = 0;
+						fabric.util.requestAnimFrame(render);
 					}
 					else {
-						callback();
+						callback()
 					}
 
-					_this.canvas.renderAll();
-					fabric.util.requestAnimFrame(render);
 				}, _this.delay);
 
 			})();
-
-			return this;
-		},
-
-		/**
-		 * Set Animation Delay
-		 * @param delay
-		 * @returns {fabric.SvgAnimation}
-		 */
-		setDelay: function(delay) {
-			this.delay = delay;
 
 			return this;
 		},
@@ -290,7 +302,7 @@
 			var _this = this;
 
 			this.onePlay(function(){
-				_this.idLayer = 0;
+				_this.loop = true;
 			});
 
 			this.playAnimation = true;
@@ -333,18 +345,16 @@
 			if (m) {
 				ctx.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
 			}
-
 			_this.transform(ctx);
+
 			_this._setShadow(ctx);
 			_this.clipTo && fabric.util.clipContext(_this, ctx);
-
-
 			for (var i = 0, l = _this.paths.length; i < l; ++i) {
 				_this.paths[i].render(ctx, true);
 			}
-
 			_this.clipTo && ctx.restore();
 			_this._removeShadow(ctx);
+
 			ctx.restore();
 		},
 

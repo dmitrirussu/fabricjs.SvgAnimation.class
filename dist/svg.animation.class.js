@@ -256,13 +256,10 @@
 		/**
 		 * One play animation
 		 *
-		 * @param callback
 		 * @returns {fabric.SvgAnimation}
 		 */
-		onePlay: function(callback) {
+		onePlay: function() {
 			var _this = this;
-
-			callback = callback === undefined ? function(){} : callback;
 
 			(function render() {
 				setTimeout(function(){
@@ -282,9 +279,6 @@
 						_this.idLayer = 0;
 						fabric.util.requestAnimFrame(render);
 					}
-					else {
-						callback()
-					}
 
 				}, _this.delay);
 
@@ -299,15 +293,12 @@
 		 * @returns {fabric.SvgAnimation}
 		 */
 		play : function() {
-			var _this = this;
-
-			this.onePlay(function(){
-				_this.loop = true;
-			});
-
 			this.playAnimation = true;
+			this.loop = true;
 
-			return  this;
+			this.onePlay();
+
+			return this;
 		},
 
 		/**

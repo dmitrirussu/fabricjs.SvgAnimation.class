@@ -283,6 +283,8 @@
 
 			})();
 
+			_this.idLayer = 0;
+
 			return this;
 		},
 

@@ -263,7 +263,6 @@
 
 			(function render() {
 				setTimeout(function(){
-
 					if ( _this.idLayer < _this.groupPaths.length - 1 ) {
 
 						_this.drawLayer(_this.ctx, _this.groupPaths[_this.idLayer]);

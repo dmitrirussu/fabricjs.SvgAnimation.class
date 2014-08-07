@@ -3,7 +3,6 @@
  */
 
 (function(global) {
-
 	'use strict';
 
 	var fabric = global.fabric || (global.fabric = { }),

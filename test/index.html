@@ -1,9 +1,19 @@
-/**
- * Created by DRU on 04.08.2014.
- */
-
-window.onload = function() {
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<script language="JavaScript" type="application/javascript" src="/lib/dist/fabric.js"></script>
+	<script language="JavaScript" type="application/javascript" src="/dist/svg.animation.class.js"></script>
+	<script language="JavaScript" type="application/javascript" src="test.js"></script>
+</head>
+<body>
+<canvas id="c" width="500" height="400" style="border: solid;"></canvas>
+<br />
+<br />
+<pre>
 	var canvas = new fabric.Canvas('c');
+	//disable standard rotation
+	fabric.Object.prototype.hasRotatingPoint = false;
 
 	//Animation
 
@@ -34,5 +44,6 @@ window.onload = function() {
 		obj.play().setDelay(100);
 		canvas.centerObject(obj).add(obj).renderAll();
 	});
-
-};
+</pre>
+</body>
+</html>

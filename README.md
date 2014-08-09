@@ -1,7 +1,7 @@
 fabricJs.SvgAnimation.class
 ===========================
 
-Using this fabric.SvgAnimation class offer possibility tot animate an Svg object
+Using this fabric.SvgAnimation class offer possibility to animate an Svg object
 
 Important:
 ===
@@ -11,7 +11,7 @@ Important:
 Example of using:
 ===
 
-	var canvas = fabric.createCanvasElement();
+	var canvas = fabric.Canvas('canvas-element-id');
 
 	//One Play Svg Animation
 	new fabric.SvgAnimation('assets/animation.svg', function(obj){
@@ -32,6 +32,7 @@ Example of using:
 
 		canvas.centerObject(obj).add(obj).renderAll();
 	});
+	
 	canvas.renderAll();
 
 <a href="https://github.com/kangax/fabric.js" ta>Fabric JS</a>

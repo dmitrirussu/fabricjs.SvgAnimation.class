@@ -1,5 +1,5 @@
 /**
- * Created by DRU <dmitri.russu@gmail.com> on 01.08.2014.
+ * Created by Dmitri Russu <dmitri.russu@gmail.com> on 01.08.2014.
  */
 
 (function(global) {

@@ -321,7 +321,7 @@
 		 */
 		drawLayer: function(ctx, groupPaths) {
 			if ( groupPaths === undefined || groupPaths === "undefined" ){
-				throw new Error('SvgAnimation.drawLayer is undefinde param');
+				throw new Error('SvgAnimation.drawLayer is undefined param');
 			}
 
 			this.paths = groupPaths;

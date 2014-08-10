@@ -11,7 +11,7 @@
 		parentToObject = fabric.Object.prototype.toObject;
 
 	if (fabric.SvgAnimation) {
-		fabric.warn('fabric.PathGroup is already defined');
+		fabric.warn('fabric.SvgAnimation is already defined');
 		return;
 	}
 

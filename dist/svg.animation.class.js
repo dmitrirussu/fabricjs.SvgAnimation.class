@@ -36,6 +36,9 @@
 		 */
 		fill: '',
 
+		/**
+		 * Svg Animation XML Header
+		 */
 		header: '<?xml version="1.0" encoding="UTF-8" standalone="no"?>',
 
 		/**
@@ -68,6 +71,9 @@
 		 */
 		delay: 1000,
 
+		/**
+		 * Do Animation in loop by default is on false
+		 */
 		loop: false,
 
 		/**
@@ -82,7 +88,7 @@
 		 */
 		initialize: function(url, callBack) {
 			var _this = this;
-				callBack = callBack !== "undefined" ? callBack : function(){};
+				callBack = callBack !== "undefined" && callBack !== undefined ? callBack : function(){};
 			this.groupPaths = [];
 			this.paths = [];
 			this.options = {};
@@ -139,25 +145,21 @@
 				//create Header
 				_this.getXmlHeader(xml);
 
-				_this.options.widthAttr = _this.options.width = parseFloat(xml.documentElement.getAttribute('width'));
-				_this.options.heightAttr = _this.options.height = parseFloat(xml.documentElement.getAttribute('height'));
-
 				var svgGroups = xml.documentElement.children,
-					svgGroupLength = xml.documentElement.children.length;
+					svgGroupLength = svgGroups.length;
 
-				for (var i = svgGroupLength; --i;) {
-
+				for (var idLayer = svgGroupLength; idLayer--;) {
 					// skeep none group element
-					if ( svgGroups[i].nodeName !== 'g' ) {
+					if ( svgGroups[idLayer].nodeName !== 'g' ) {
 						continue;
 					}
 
-					fabric.parseSVGDocument(_this.loadXmlDomParser(_this.header + _this.xmlToString(svgGroups[i]) + '</svg>').documentElement, function(results, options) {
-						_this.groupPaths.push(results);
+					fabric.parseSVGDocument(_this.loadXmlDomParser(_this.header + _this.xmlToString(svgGroups[idLayer]) + '</svg>').documentElement, function(groupPaths, options) {
+						_this.groupPaths.push(groupPaths);
 
 						if ( !_this.paths.length ) {
 							_this.options = options;
-							_this.paths = results;
+							_this.paths = groupPaths;
 
 							for (var s = _this.paths.length; s--; ) {
 								_this.paths[s].group = _this;
@@ -198,9 +200,8 @@
 				svgAttributesLength = svgAttributes.length;
 
 			this.header = '<svg';
-			for(var iAttribuet = 0; iAttribuet < svgAttributesLength; iAttribuet++) {
-
-				this.header += " " + svgAttributes[iAttribuet].name +'="'+ svgAttributes[iAttribuet].value +'"';
+			for(var iAttribute = 0; iAttribute < svgAttributesLength; iAttribute++) {
+				this.header += " " + svgAttributes[iAttribute].name +'="'+ svgAttributes[iAttribute].value +'"';
 			}
 			this.header += ">";
 
@@ -259,28 +260,31 @@
 		 */
 		onePlay: function() {
 			var _this = this;
+			this.playAnimation = true;
 
 			(function render() {
-				setTimeout(function(){
-					if ( _this.idLayer < _this.groupPaths.length - 1 ) {
+				if ( _this.playAnimation ) {
 
-						_this.drawLayer(_this.ctx, _this.groupPaths[_this.idLayer]);
-						_this.idLayer = (_this.idLayer > (_this.groupPaths.length - 1) ? 0 : _this.idLayer + 1);
+					setTimeout(function(){
+						if ( _this.idLayer < _this.groupPaths.length - 1 ) {
 
-						_this.canvas.renderAll();
-						fabric.util.requestAnimFrame(render);
-					}
-					else if ( _this.loop ) {
-						_this.idLayer = 0;
+							_this.drawLayer(_this.ctx, _this.groupPaths[_this.idLayer]);
+							_this.idLayer += 1;
 
-						_this.canvas.renderAll();
-						fabric.util.requestAnimFrame(render);
-					}
+							_this.canvas.renderAll();
+							fabric.util.requestAnimFrame(render);
+						}
+						else if ( _this.loop ) {
+							_this.idLayer = 0;
 
-				}, _this.delay);
-
+							_this.canvas.renderAll();
+							fabric.util.requestAnimFrame(render);
+						}
+					}, _this.delay);
+				}
 			})();
 
+			// reset idLayer after one play execution
 			_this.idLayer = 0;
 
 			return this;
@@ -288,7 +292,6 @@
 
 		/**
 		 * Play animation in Loop
-		 *
 		 * @returns {fabric.SvgAnimation}
 		 */
 		play : function() {
@@ -301,11 +304,12 @@
 		},
 
 		/**
-		 *
+		 * Stop animation runing
 		 * @returns {fabric.SvgAnimation}
 		 */
 		stop: function() {
 			this.playAnimation = false;
+			this.loop = false;
 
 			return this;
 		},
@@ -316,34 +320,32 @@
 		 * @param groupPaths
 		 */
 		drawLayer: function(ctx, groupPaths) {
-			var _this = this;
-
 			if ( groupPaths === undefined || groupPaths === "undefined" ){
 				throw new Error('SvgAnimation.drawLayer is undefinde param');
 			}
 
-			_this.paths = groupPaths;
+			this.paths = groupPaths;
 
-			for (var s = _this.paths.length; s--; ) {
-				_this.paths[s].group = _this;
+			for (var s = this.paths.length; s--; ) {
+				this.paths[s].group = this;
 			}
 
 			ctx.save();
 
-			var m = _this.transformMatrix;
+			var m = this.transformMatrix;
 
 			if (m) {
 				ctx.transform(m[0], m[1], m[2], m[3], m[4], m[5]);
 			}
-			_this.transform(ctx);
+			this.transform(ctx);
 
-			_this._setShadow(ctx);
-			_this.clipTo && fabric.util.clipContext(_this, ctx);
-			for (var i = 0, l = _this.paths.length; i < l; ++i) {
-				_this.paths[i].render(ctx, true);
+			this._setShadow(ctx);
+			this.clipTo && fabric.util.clipContext(this, ctx);
+			for (var i = 0, l = this.paths.length; i < l; ++i) {
+				this.paths[i].render(ctx, true);
 			}
-			_this.clipTo && ctx.restore();
-			_this._removeShadow(ctx);
+			this.clipTo && ctx.restore();
+			this._removeShadow(ctx);
 
 			ctx.restore();
 		},
